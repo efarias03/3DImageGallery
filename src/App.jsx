@@ -11,7 +11,9 @@ const GOLDENRATIO = 1.61803398875;
 
 export const App = ({ images }) => (
 
-  <Canvas shadows dpr={[1, 1.5]} camera={{ position: [0, 2, 15], fov: 70 }}>
+  <Canvas 
+  dpr={[1, 1.5]} 
+  camera={{ position: [0, 2, 15], fov: 70 }}>
     <color attach="background" args={['#191920']} />
     <fog attach="fog" args={['#191920', 0, 15]} />
     <group position={[0, -0.5, 0]}>
