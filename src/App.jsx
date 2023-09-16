@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useCursor, MeshReflectorMaterial, Image, Text, Environment, OrbitControls } from '@react-three/drei';
+import { useCursor, MeshReflectorMaterial, Image, Text, Environment, OrbitControls, Loader } from '@react-three/drei';
 import { useRoute, useLocation } from 'wouter';
 import { easing } from 'maath';
 import getUuid from 'uuid-by-string';
@@ -9,33 +9,38 @@ import { useControls } from 'leva';
 
 const GOLDENRATIO = 1.61803398875;
 
-export const App = ({ images }) => (
 
-  <Canvas 
-  dpr={[1, 1.5]} 
-  camera={{ fov: 70 }}>
-    <color attach="background" args={['#191920']} />
-    <fog attach="fog" args={['#191920', 0, 15]} />
-    <group position={[0, -0.5, 0]}>
-      <Frames images={images} />
-      <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[50, 50]} />
-        <MeshReflectorMaterial
-          blur={[300, 100]}
-          resolution={1080}
-          mixBlur={1}
-          mixStrength={80}
-          roughness={1}
-          depthScale={1.2}
-          minDepthThreshold={0.4}
-          maxDepthThreshold={1.4}
-          color="#050505"
-          metalness={1}
-        />
-      </mesh>
-    </group>
-    <Environment preset="city" />
-  </Canvas>
+export const App = ({ images }) => (
+  <>
+    <Canvas
+      dpr={[1, 1.5]}
+      camera={{ fov: 70 }}>
+      <color attach="background" args={['#191920']} />
+      <fog attach="fog" args={['#191920', 0, 15]} />
+      <Suspense fallback={null} >
+        <group position={[0, -0.5, 0]}>
+          <Frames images={images} />
+          <mesh rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[50, 50]} />
+            <MeshReflectorMaterial
+              blur={[300, 100]}
+              resolution={1080}
+              mixBlur={1}
+              mixStrength={80}
+              roughness={1}
+              depthScale={1.2}
+              minDepthThreshold={0.4}
+              maxDepthThreshold={1.4}
+              color="#050505"
+              metalness={1}
+            />
+          </mesh>
+        </group>
+        <Environment preset="city" />
+      </Suspense>
+    </Canvas >
+    <Loader />
+  </>
 );
 
 function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() }) {
@@ -45,7 +50,7 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
   const [, setLocation] = useLocation();
   useEffect(() => {
     clicked.current = ref.current.getObjectByName(params?.id);
-    
+
     if (clicked.current) {
       clicked.current.parent.updateWorldMatrix(true, true);
       clicked.current.parent.localToWorld(p.set(0, GOLDENRATIO / 2, 1.25))
