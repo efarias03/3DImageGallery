@@ -14,8 +14,7 @@ const GOLDENRATIO = 1.61803398875;
 export const App = ({ images }) => (
   <>
     <Canvas
-      dpr={[1, 1.5]}
-      camera={{ fov: 70 }}>
+      camera={{ fov: `${isMobile ? 110 : 70}` }}>
       <color attach="background" args={['#191920']} />
       <fog attach="fog" args={['#191920', 0, 15]} />
       <Suspense fallback={null} >
@@ -54,14 +53,13 @@ function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() })
 
     if (clicked.current) {
       clicked.current.parent.updateWorldMatrix(true, true);
-      clicked.current.parent.localToWorld(p.set(0, GOLDENRATIO / 2, 1.25))
+      clicked.current.parent.localToWorld(p.set(isMobile ? .06 : 0, GOLDENRATIO / 2, isMobile ? 0.8 : 1.25))
       clicked.current.parent.getWorldQuaternion(q);
     } else {
       p.set(0, 0, 5.5);
       q.identity()
     }
   })
-
   useFrame((state, dt) => {
     easing.damp3(state.camera.position, p, 0.4, dt);
     easing.dampQ(state.camera.quaternion, q, 0.4, dt);
