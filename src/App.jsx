@@ -7,6 +7,7 @@ import { easing } from 'maath';
 import getUuid from 'uuid-by-string';
 import { useControls } from 'leva';
 
+const isMobile = window.innerWidth < 768;
 const GOLDENRATIO = 1.61803398875;
 
 
@@ -24,7 +25,7 @@ export const App = ({ images }) => (
             <planeGeometry args={[50, 50]} />
             <MeshReflectorMaterial
               blur={[300, 100]}
-              resolution={1080}
+              resolution={`${isMobile ? 256 : 1080}`}
               mixBlur={1}
               mixStrength={80}
               roughness={1}
@@ -32,8 +33,7 @@ export const App = ({ images }) => (
               minDepthThreshold={0.4}
               maxDepthThreshold={1.4}
               color="#050505"
-              metalness={1}
-            />
+              metalness={1} />
           </mesh>
         </group>
         <Environment preset="city" />
@@ -42,6 +42,7 @@ export const App = ({ images }) => (
     <Loader />
   </>
 );
+
 
 function Frames({ images, q = new THREE.Quaternion(), p = new THREE.Vector3() }) {
   const ref = useRef();
