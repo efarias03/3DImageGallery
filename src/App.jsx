@@ -15,27 +15,30 @@ export const App = ({ images }) => (
   <>
     <Canvas
       camera={{ fov: `${isMobile ? 110 : 70}` }}>
-      <color attach="background" args={['#191920']} />
-      <fog attach="fog" args={['#191920', 0, 15]} />
+      <color attach="background" args={['#F0ECE2']} />
+      <fog attach="fog" args={['#F0ECE2', 0, 15]} />
       <Suspense fallback={null} >
         <group position={[0, -0.5, 0]}>
           <Frames images={images} />
           <mesh rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[50, 50]} />
             <MeshReflectorMaterial
-              blur={[300, 100]}
+              blur={[600, 600]}
               resolution={`${isMobile ? 256 : 1080}`}
-              mixBlur={1}
-              mixStrength={80}
+              mixBlur={0.5}
+              mixStrength={1}
               roughness={1}
-              depthScale={1.2}
-              minDepthThreshold={0.4}
-              maxDepthThreshold={1.4}
-              color="#050505"
+              depthScale={2}
+              minDepthThreshold={1.5}
+              maxDepthThreshold={2}
+              color="#DFD3C3"
               metalness={1} />
           </mesh>
         </group>
         <Environment preset="city" />
+        <Text color={"#000000"} maxWidth={1} anchorX={"center"} anchorY={"top"} position={[0, 4, -2]} fontSize={1}>
+          ETIC Museum
+        </Text>
       </Suspense>
     </Canvas >
     <Loader />
@@ -114,7 +117,7 @@ function Frame({ url, c = new THREE.Color(), ...props }) {
         </mesh>
         <Image raycast={() => null} ref={image} position={[0, 0, 0.7]} url={url} />
       </mesh>
-      <Text maxWidth={0.1} anchorX={"left"} anchorY={"top"} position={[0.55, GOLDENRATIO, 0]} fontSize={0.025}>
+      <Text color={"#000000"} maxWidth={0.1} anchorX={"left"} anchorY={"top"} position={[0.55, GOLDENRATIO, 0]} fontSize={0.025}>
         {actualName ? actualName : name.split("-").join(" ")}
       </Text>
     </group>
